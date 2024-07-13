@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>recipe app</title>
+</head>
+<style>
+    *{
+        margin: 0;padding: 0;
+        box-sizing: border-box;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+    }
+    body{
+        height: 100vh;
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color:#f4c531;
+    }
+    .recipe-container{
+        background-color:#ffffff;
+        width: 30vw;
+        padding: 1vw;
+        border-radius: 5px;
+        box-shadow: 0px 0px 5px black;
+        /* height: 60vh; */
+    }
+    .content{
+        display: flex;
+        justify-content: space-between;
+    }
+    .recipe-container input{
+        padding: 0.2vw;
+        text-transform: capitalize;
+        margin-right: 5vw;
+        border: none;
+        border-bottom: 3px solid #f4c531;
+        outline: none;
+    }
+    .recipe-container .btn{
+        padding: 0.4vw;
+        text-transform: capitalize;
+        background-color: #f4c531;
+        border: none;
+        color: white;
+        width: 6vw;
+        letter-spacing: 1px;
+        border-radius: 3px;
+    }
+    .result{
+      /* background-color: aqua; */
+      
+    }
+    .image{
+        display: flex;
+        align-items: center;
+        /* background-color: blue; */
+        justify-content: center;
+        flex-direction: column;
+        padding: 4vw;
+        height: 20vh;
+        margin: 1vw;
+    }
+    .image img{
+        width: 130px;
+        /* max-width: 150px; */
+        object-fit: cover;
+        object-position: center;
+        height: 60px;
+        /* margin-bottom: 10px; */
+    
+    }
+    .result{
+        position: relative;
+    }
+    .result .title{
+        background-color: #f4c531;
+        width: 15vw;
+        padding: 0.2vw;
+        margin-bottom: 10px;
+        border-radius: 3px;
+    }
+    .result h2{
+        font-size:13px ;
+        text-align: center;
+        text-transform: capitalize;
+        font-weight: bold;
+    }
+    .result p{
+        font-size: 10px;
+        text-align: center;
+        text-transform: capitalize;
+        padding-top: 0.3vw;
+    }
+    .result .ul{
+        /* background-color: red; */
+        margin: 0.4vw;
+        padding: 0.4vw;
+        /* height: 200px; */
+        
+    }
+    .ul ul{
+        position: relative;
+        display: grid;
+        grid-template-columns: auto auto;
+        gap:0.8em 1.1em;
+        padding: 0.5vw;
+    }
+     ul li{
+     font-size: 10px;
+     }
+     .recipebtn{
+        padding: 0.5vw;
+        background-color: #f4c531;
+        color: #ffffff;
+        outline: none;
+        border: none;
+        cursor: pointer;
+        width: 10vw;
+        text-transform: capitalize;
+        border-radius: 3px;
+        margin:0.3vw;
+     }
+     .instruction{
+        background-color:#ffffff;
+        line-height: 1.5vw;
+        /* height: 60%; */
+        width: 30vw;
+        position:absolute;
+        z-index: 3;
+        top:-45px;
+        left: -13px;
+        /* right: 10px; */
+        border-radius: 5px;
+        padding: 1.3vw;
+        display: none;
+     }
+     .instruction i{
+        position: absolute;
+        padding: 1vw;
+        top: 10px;
+        right: 1vw;
+        color: #f4c531;
+     }
+     .instruction p{
+        padding: 2vw;
+        margin-bottom: 1vw;
+        font-size: 1vw;
+        text-align: left;
+        color: #f4c531;
+     }
+     span{
+        text-transform: capitalize;
+        margin-left: 10%;
+        font-weight: bold;
+        color: #f4c531;
+     }
+     @media (max-width:400px) {
+        .recipe-container{
+            width: 80vw;
+            padding-left: 3vw;
+        }
+        .recipebtn{
+            width: 30vw;
+        }
+        .recipe-container .btn{
+           width: 20vw;
+        }
+        .instruction{
+            width: 100%;
+            height: 100%;
+            line-height: 2.5vw;
+            top: -3%;
+        }
+     }
+</style>
+<body>
+    <div class="recipe-container">
+        <div class="content">
+     <input type="text" placeholder="enter something here....." id="inputval" >
+     <button id="btn" class="btn">search</button>
+     </div>
+     <div class="result">
+        
+     </div>
+    
+    </div>
+    <script>
+        let searchbtn=document.querySelector("#btn");
+        let inputval=document.querySelector("#inputval");
+        let result=document.querySelector(".result");
+       
+        const url=`https:www.themealdb.com/api/json/v1/1/search.php?s=`
+        searchbtn.addEventListener("click",async()=>{
+            const data=await fetch(`${url}${inputval.value.trim()}`);
+            const realdata=await data.json();
+            let mymeal=realdata.meals[0];
+            console.log(mymeal);
+            console.log(mymeal.strArea);
+            console.log(mymeal.strCategory);
+            console.log(mymeal.strMeal);
+            console.log(mymeal.strMealThumb);
+            console.log(mymeal.strInstructions);
+            let count=1;
+            let ingredients=[];
+            for(let i in mymeal){
+                let measures="";
+                if(i.startsWith("strIngredient")&&mymeal[i]){
+                   let ingredient=mymeal[i];
+                   measure=mymeal[`strMeasure${count}`];
+                   count++;
+                   ingredients.push(`${measure}${ingredient}`)
+                }  
+            }
+           result.innerHTML=`
+           <div class='image'>
+           <img src=${mymeal.strMealThumb}></img>
+           <div class='title'>
+            <h2>${mymeal.strMeal}</h2>
+            <p>${mymeal.strArea}</p>
+            </div>
+           </div>
+           
+           <div class='ul'>
+             <ul>
+             </ul> 
+             </div>
+             <div class='instruction'>
+            <i class="fa-solid fa-xmark cross"></i>
+            <span>steps:-</span>
+            <p>${mymeal.strInstructions}</p>
+         </div>
+             <button class='recipebtn' id="viewrecipe">view recipe</button>
+           `;
+           ingredients.forEach((e)=>{
+            let ul=document.querySelector("ul");
+            let list=document.createElement("li");
+            list.innerHTML=e;
+            ul.appendChild(list);
+           })
+          console.log(ingredients);
+          let recipebtns=document.querySelector(".recipebtn");
+          let show=document.querySelector(".instruction");
+          let cross=document.querySelector(".cross")
+          recipebtns.addEventListener("click",()=>{
+            show.style.display="block";
+          });
+          cross.addEventListener("click",()=>{
+            show.style.display="none";
+          });
+        });
+      
+    </script>
+</body>
+</html>
